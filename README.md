@@ -15,7 +15,7 @@
 
 ## 效果图
 
- ![Pic1](/pic1.png)
+ ![Pic1](/pic1.PNG)
 
 
  作者: sndnvaps
