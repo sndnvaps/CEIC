@@ -4,8 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"strings"
+	"time"
+
+	cli "gopkg.in/urfave/cli.v1"
 )
 
 /*
@@ -76,7 +81,7 @@ func LoadURL(link string) (RespBody, error) {
 	return data, err
 }
 
-func main() {
+func CeicRun(c *cli.Context) error {
 	data, err := LoadURL("http://www.ceic.ac.cn/ajax/speedsearch?num=2")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -86,6 +91,30 @@ func main() {
 	for index := 0; index < len(CeicDatas); index++ {
 		tmp := fmt.Sprintf("%s在%s发生里氏%s地震", CeicDatas[index].LocationC, CeicDatas[index].SyncTime, CeicDatas[index].M)
 		fmt.Println(tmp)
+	}
+
+	return nil
+}
+
+func main() {
+
+	app := cli.NewApp()
+	app.Name = "CEIC-go"
+	app.Compiled = time.Now()
+	app.Version = "1.0.0"
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name:  "Jimes Yang",
+			Email: "sndnvaps@gmail.com",
+		},
+	}
+	app.Copyright = "(c) 2019 Jimes Yang<sndnvaps@gmail.com>"
+	app.Usage = "用于查询48小时全国最新的地震信息(地震信息台网站:http://www.ceic.ac.cn)"
+	app.Action = CeicRun
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 }
