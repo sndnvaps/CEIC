@@ -25,30 +25,30 @@ import (
 */
 
 type Data struct {
-	Id         string  `json:"id"`
-	CataId     string  `json:"CATA_ID"`
-	SaveTime   string  `json:"SAVE_TIME"`
-	OTime      string  `json:"O_TIME"`
-	EpiLat     string  `json:"EPI_LAT"`
-	EpiLon     string  `json:"EPI_LON"`
-	EpiDepth   float32 `json:"EPI_DEPTH"`
-	AutoFlag   string  `json:"AUTO_FLAG"`
-	OTimeFra   string  `json:"O_TIME_FRA"`
-	EqType     string  `json:"EQ_TYPE"`
-	M          string  `json:"M"`
-	MMS        string  `json:"M_MS"`
-	MMS7       string  `json:"M_MS7"`
-	MML        string  `json:"M_ML"`
-	MMB        string  `json:"M_MB"`
-	SumStn     string  `json:"SUM_STN"`
-	LocStn     string  `json:"LOC_STN"`
-	LocationC  string  `json:"LOCATION_C"`
-	LocationS  string  `json:"LOCATION_S,omitempty"`
-	CataType   string  `json:"CATA_TYPE,omitempty"`
-	SyncTime   string  `json:"SYNC_TIME"`
-	IsDel      string  `json:"IS_DEL"`
-	EqCataType string  `json:"EQ_CATA_TYPE,omitempty"`
-	NewDid     string  `json:"NEW_DID"`
+	Id         string `json:"id"`
+	CataId     string `json:"CATA_ID"`
+	SaveTime   string `json:"SAVE_TIME"`
+	OTime      string `json:"O_TIME"`    //发生时间
+	EpiLat     string `json:"EPI_LAT"`   //纬度
+	EpiLon     string `json:"EPI_LON"`   //经度
+	EpiDepth   int    `json:"EPI_DEPTH"` //深度(千米)
+	AutoFlag   string `json:"AUTO_FLAG"`
+	OTimeFra   string `json:"O_TIME_FRA"`
+	EqType     string `json:"EQ_TYPE"`
+	M          string `json:"M"`
+	MMS        string `json:"M_MS"`
+	MMS7       string `json:"M_MS7"`
+	MML        string `json:"M_ML"`
+	MMB        string `json:"M_MB"`
+	SumStn     string `json:"SUM_STN"`
+	LocStn     string `json:"LOC_STN"`
+	LocationC  string `json:"LOCATION_C"`
+	LocationS  string `json:"LOCATION_S,omitempty"`
+	CataType   string `json:"CATA_TYPE,omitempty"`
+	SyncTime   string `json:"SYNC_TIME"`
+	IsDel      string `json:"IS_DEL"`
+	EqCataType string `json:"EQ_CATA_TYPE,omitempty"`
+	NewDid     string `json:"NEW_DID"`
 }
 
 type RespBody struct {
@@ -89,7 +89,8 @@ func CeicRun(c *cli.Context) error {
 	fmt.Println(data.Result)
 	CeicDatas := data.Data
 	for index := 0; index < len(CeicDatas); index++ {
-		tmp := fmt.Sprintf("%s在%s发生里氏%s地震", CeicDatas[index].LocationC, CeicDatas[index].SyncTime, CeicDatas[index].M)
+		tmp := fmt.Sprintf("%s在%s发生里氏%s级地震(纬度:%s°,经度:%s°,深度:%d千米)",
+			CeicDatas[index].LocationC, CeicDatas[index].OTime, CeicDatas[index].M, CeicDatas[index].EpiLat, CeicDatas[index].EpiLon, CeicDatas[index].EpiDepth)
 		fmt.Println(tmp)
 	}
 
@@ -101,7 +102,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "CEIC-go"
 	app.Compiled = time.Now()
-	app.Version = "1.0.0"
+	app.Version = "1.0.1"
 	app.Authors = []cli.Author{
 		cli.Author{
 			Name:  "Jimes Yang",
